@@ -1,0 +1,37 @@
+# ============================================================
+# .gitignore — Files to Exclude from Git
+# ============================================================
+# These files/folders will NOT be tracked by Git.
+# This keeps your repository clean and secure.
+# ============================================================
+
+# ---- Node.js ----
+# The node_modules folder contains downloaded packages.
+# It's huge and can be regenerated with "npm install".
+node_modules/
+
+# ---- Environment Variables ----
+# NEVER commit .env files — they contain passwords!
+.env
+backend/.env
+
+# ---- Logs ----
+*.log
+npm-debug.log*
+
+# ---- OS Files ----
+# macOS creates .DS_Store files in every folder
+.DS_Store
+
+# Windows creates Thumbs.db for image thumbnails
+Thumbs.db
+
+# ---- IDE/Editor Files ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- Docker ----
+# Don't track MySQL data volumes
+mysql-data/

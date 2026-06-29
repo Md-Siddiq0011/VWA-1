@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Character encoding for proper text rendering -->
+  <meta charset="UTF-8" />
+
+  <!-- Makes the page responsive on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Page title shown in browser tab -->
+  <title>VoteApp — Cast Your Vote</title>
+
+  <!-- SEO: Description shown in search engine results -->
+  <meta name="description" content="A simple, beginner-friendly voting web application. Cast your vote for your favorite candidate and see live results." />
+
+  <!-- Google Fonts: Inter for clean modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Our custom stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <!-- Logo / Brand -->
+      <div class="brand">
+        <span class="brand-icon">🗳️</span>
+        <h1>VoteApp</h1>
+      </div>
+      <!-- Navigation links -->
+      <nav class="header-nav">
+        <a href="#candidates" class="nav-link">Candidates</a>
+        <a href="#results" class="nav-link">Results</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========== HERO / TIMER SECTION ========== -->
+  <section class="hero-section" id="hero">
+    <div class="hero-content">
+      <h2 class="hero-title">Make Your Voice Count</h2>
+      <p class="hero-subtitle">Vote for the candidate you believe in. Every vote matters.</p>
+
+      <!-- Countdown Timer Display -->
+      <div class="timer-container" id="timer-container">
+        <div class="timer-label" id="timer-label">Voting opens in</div>
+        <div class="timer-display" id="timer-display">
+          <div class="timer-unit">
+            <span class="timer-number" id="timer-hours">00</span>
+            <span class="timer-text">Hours</span>
+          </div>
+          <div class="timer-separator">:</div>
+          <div class="timer-unit">
+            <span class="timer-number" id="timer-minutes">00</span>
+            <span class="timer-text">Minutes</span>
+          </div>
+          <div class="timer-separator">:</div>
+          <div class="timer-unit">
+            <span class="timer-number" id="timer-seconds">00</span>
+            <span class="timer-text">Seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Badge: shows current voting status -->
+      <div class="status-badge" id="status-badge">
+        <span class="status-dot"></span>
+        <span class="status-text" id="status-text">Loading...</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CANDIDATES SECTION ========== -->
+  <section class="candidates-section" id="candidates">
+    <div class="section-header">
+      <h2 class="section-title">Our Candidates</h2>
+      <p class="section-subtitle">Choose the leader who represents your vision for the future.</p>
+    </div>
+
+    <!-- Candidate Cards Container - filled by JavaScript -->
+    <div class="candidates-grid" id="candidates-grid">
+      <!-- Cards will be injected here by script.js -->
+    </div>
+  </section>
+
+  <!-- ========== RESULTS SECTION ========== -->
+  <section class="results-section" id="results">
+    <div class="section-header">
+      <h2 class="section-title">Live Results</h2>
+      <p class="section-subtitle">Watch the votes come in real-time.</p>
+    </div>
+
+    <!-- Total votes counter -->
+    <div class="total-votes" id="total-votes">
+      Total Votes: <span id="total-count">0</span>
+    </div>
+
+    <!-- Results bars container - filled by JavaScript -->
+    <div class="results-container" id="results-container">
+      <!-- Result bars will be injected here by script.js -->
+    </div>
+
+    <!-- Winner announcement (hidden until voting closes) -->
+    <div class="winner-announcement" id="winner-announcement" style="display: none;">
+      <div class="winner-trophy">🏆</div>
+      <h3 class="winner-title">Winner</h3>
+      <p class="winner-name" id="winner-name"></p>
+      <p class="winner-votes" id="winner-votes"></p>
+    </div>
+  </section>
+
+  <!-- ========== ADMIN SECTION ========== -->
+  <section class="admin-section" id="admin">
+    <div class="section-header">
+      <h2 class="section-title">Admin Controls</h2>
+      <p class="section-subtitle">Reset votes to start a new election.</p>
+    </div>
+    <button class="btn btn-danger" id="reset-btn" onclick="resetVotes()">
+      🔄 Reset All Votes
+    </button>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="app-footer">
+    <p>Built with ❤️ for learning · VoteApp &copy; 2026</p>
+  </footer>
+
+  <!-- ========== TOAST NOTIFICATION ========== -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span class="toast-message" id="toast-message">Vote recorded!</span>
+  </div>
+
+  <!-- Our JavaScript file (loaded last so HTML is ready) -->
+  <script src="script.js"></script>
+</body>
+</html>

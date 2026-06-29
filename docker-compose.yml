@@ -1,0 +1,106 @@
+# ============================================================
+# docker-compose.yml — Multi-Container Setup
+# ============================================================
+# Docker Compose lets us run MULTIPLE containers with one command.
+# This file defines TWO services:
+#   1. "app" — Our Node.js backend (which also serves the frontend)
+#   2. "db"  — The MySQL database
+#
+# To start everything: docker compose up --build
+# To stop everything:  docker compose down
+# ============================================================
+
+# Version of Docker Compose file format
+# (Docker Compose v2 doesn't need this, but it's good practice)
+
+services:
+  # ---- SERVICE 1: The Node.js Application ----
+  app:
+    # Build the Docker image using our Dockerfile
+    # "context: ." means use the current directory as the build context
+    # "dockerfile" points to where our Dockerfile lives
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+
+    # Name the container for easy reference
+    container_name: voteapp-server
+
+    # Map port 3000 on your computer to port 3000 in the container
+    # This lets you access the app at http://localhost:3000
+    ports:
+      - "3000:3000"
+
+    # Environment variables passed to the Node.js app
+    # These override the defaults in db.js
+    environment:
+      - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=voteapp_password
+      - DB_NAME=voteapp
+      - VOTING_DELAY_SECONDS=10
+      - VOTING_DURATION_SECONDS=120
+
+    # Wait for MySQL to be ready before starting the app
+    depends_on:
+      db:
+        condition: service_healthy
+
+    # Restart the app if it crashes
+    restart: unless-stopped
+
+    # Connect to the same network as MySQL
+    networks:
+      - voteapp-network
+
+  # ---- SERVICE 2: MySQL Database ----
+  db:
+    # Use the official MySQL 8.0 image from Docker Hub
+    image: mysql:8.0
+
+    # Name the container
+    container_name: voteapp-mysql
+
+    # MySQL environment variables (configure the database)
+    environment:
+      - MYSQL_ROOT_PASSWORD=voteapp_password
+      - MYSQL_DATABASE=voteapp
+
+    # Map port 3306 so you can connect with MySQL tools
+    ports:
+      - "3306:3306"
+
+    # Mount the schema.sql file to auto-run on first startup
+    # Files in /docker-entrypoint-initdb.d/ run automatically
+    volumes:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - mysql-data:/var/lib/mysql
+
+    # Health check: verify MySQL is actually ready for connections
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pvoteapp_password"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+    # Restart if it crashes
+    restart: unless-stopped
+
+    # Connect to the same network as the app
+    networks:
+      - voteapp-network
+
+# ---- NETWORKS ----
+# A custom network so our containers can talk to each other
+networks:
+  voteapp-network:
+    driver: bridge
+
+# ---- VOLUMES ----
+# Named volume to persist MySQL data between restarts
+# Without this, you'd lose all votes when you stop the containers
+volumes:
+  mysql-data:

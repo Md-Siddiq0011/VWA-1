@@ -1,0 +1,35 @@
+# ============================================================
+# .dockerignore — Files to Exclude from Docker Build
+# ============================================================
+# These files won't be copied into the Docker image.
+# This makes the build faster and the image smaller.
+# ============================================================
+
+# Don't copy node_modules — we install fresh inside Docker
+node_modules/
+
+# Don't copy environment files
+.env
+
+# Don't copy Git history
+.git/
+.gitignore
+
+# Don't copy documentation files (not needed at runtime)
+README.md
+LICENSE
+DEPLOYMENT.md
+PROJECT-HISTORY.md
+ARCHITECTURE.md
+
+# Don't copy Docker files themselves
+docker-compose.yml
+.dockerignore
+
+# Don't copy IDE settings
+.vscode/
+.idea/
+
+# Don't copy OS files
+.DS_Store
+Thumbs.db
