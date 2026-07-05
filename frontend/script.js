@@ -30,7 +30,7 @@ var candidates = [
     name: "Candidate B",
     description:
       "An experienced administrator committed to economic growth, job creation, and strengthening public infrastructure.",
-    image: "images/candidate-b.jpg",
+    image: "images/New/Modi ji.jpg",
     barClass: "bar-b",
   },
   {
