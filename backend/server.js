@@ -14,7 +14,6 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-const bcrypt = require("bcrypt");
 const multer = require("multer");
 const { initDatabase, getPool } = require("./db");
 
@@ -103,10 +102,12 @@ app.post("/api/register", async (req, res) => {
 
     // TESTING ONLY: storing original password directly
 
-await pool.query(
+await db.query(
   "INSERT INTO users (name,email,password) VALUES (?,?,?)",
   [name, email, password]
 );
+
+return success(res, "Registraion Success!")
 
   } catch (error) {
     console.error(error.message);
@@ -133,13 +134,12 @@ app.post("/api/login", async (req, res) => {
 
     const user = users[0];
 
-    // Password security:
-    // During login, bcrypt compares the typed password with the stored hash.
-    const passwordMatches = await bcrypt.compare(password, user.password);
+    // TESTING ONLY:
+// Compare normal text password without bcrypt
 
-    if (!passwordMatches) {
-      return failure(res, 401, "Invalid email or password");
-    }
+if (password !== user.password) {
+  return failure(res, 401, "Invalid email or password");
+}
 
     return success(res, "Login successful", {
       userId: user.id,
