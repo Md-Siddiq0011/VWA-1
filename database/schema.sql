@@ -1,46 +1,55 @@
 -- ============================================================
--- schema.sql — Database Schema
+-- schema.sql - VWA-2 learning database schema
 -- ============================================================
--- This file creates the database and the votes table.
--- It runs automatically when the MySQL Docker container starts.
---
--- What this does:
--- 1. Creates a database called "voteapp" (if it doesn't exist)
--- 2. Switches to that database
--- 3. Creates a "votes" table to store each individual vote
+-- The server creates these tables automatically on startup.
+-- Keep this file for learning, local practice, and reference.
 -- ============================================================
 
--- Step 1: Create the database
--- IF NOT EXISTS prevents errors if the database already exists
 CREATE DATABASE IF NOT EXISTS voteapp;
-
--- Step 2: Switch to the voteapp database
--- All following commands will apply to this database
 USE voteapp;
 
--- Step 3: Create the votes table
--- Each row in this table represents ONE vote
-CREATE TABLE IF NOT EXISTS votes (
-    -- id: A unique number for each vote (auto-increments: 1, 2, 3, ...)
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-
-    -- candidate: The name of the candidate who received this vote
-    -- VARCHAR(100) means a text field up to 100 characters long
-    -- NOT NULL means this field cannot be empty
-    candidate VARCHAR(100) NOT NULL,
-
-    -- voted_at: When this vote was cast
-    -- CURRENT_TIMESTAMP automatically records the current date/time
-    voted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    has_voted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ============================================================
--- That's it! The database is ready.
--- The "votes" table will store entries like:
---
--- | id | candidate     | voted_at            |
--- |----|---------------|---------------------|
--- | 1  | Candidate A   | 2026-06-29 10:15:00 |
--- | 2  | Candidate B   | 2026-06-29 10:15:05 |
--- | 3  | Candidate A   | 2026-06-29 10:15:10 |
--- ============================================================
+CREATE TABLE IF NOT EXISTS candidates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    party VARCHAR(150) NOT NULL,
+    description TEXT,
+    image VARCHAR(255),
+    votes INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS election (
+    id INT PRIMARY KEY,
+    status VARCHAR(20) NOT NULL DEFAULT 'closed'
+);
+
+INSERT IGNORE INTO election (id, status) VALUES (1, 'closed');
+
+INSERT INTO candidates (name, party, description, image)
+SELECT * FROM (
+    SELECT
+      'Vijay',
+      'TVK (Tamilaga Vettri Kazhagam)',
+      'Tamilaga Vettri Kazhagam candidate for the TN 2031 Legislative Assembly election.',
+      '/assets/images/vijay.jpg'
+    UNION ALL SELECT
+      'M. K. Stalin',
+      'DMK (Dravida Munnetra Kazhagam)',
+      'Dravida Munnetra Kazhagam candidate for the TN 2031 Legislative Assembly election.',
+      '/assets/images/stalin.jpg'
+    UNION ALL SELECT
+      'Edappadi K. Palaniswami',
+      'ADMK (All India Anna Dravida Munnetra Kazhagam)',
+      'All India Anna Dravida Munnetra Kazhagam candidate for the TN 2031 Legislative Assembly election.',
+      '/assets/images/eps.jpg'
+) AS default_candidates
+WHERE NOT EXISTS (SELECT 1 FROM candidates);

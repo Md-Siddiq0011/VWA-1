@@ -1,191 +1,200 @@
-# 🗳️ VoteApp — Single Service Voting Web Application
+# TN 2031 Legislative Assembly Voting System
 
-A **simple, beginner-friendly, production-ready** Full Stack Voting Web Application built as **ONE SERVICE**.
+Version: VWA-2
 
-Every line of code is commented for learning. Perfect for beginners who want to understand how full-stack web applications work.
+VWA-2 is a beginner-friendly voting web application built with HTML, CSS, JavaScript, Node.js, Express.js, and MySQL. It is designed as a learning project and keeps the main logic inside `server.js`, `db.js`, and `frontend/js/app.js`.
 
----
+## Features
 
-## ✨ Features
+- User registration and login
+- Password hashing with bcrypt
+- Dynamic candidates loaded from MySQL
+- One user, one vote
+- Voting confirmation before submit
+- Admin login using `ADMIN_USERNAME` and `ADMIN_PASSWORD`
+- Candidate add, edit, delete with image upload
+- Candidate changes allowed only when election is closed
+- Election start, stop, and reset controls
+- Admin dashboard with total voters, submitted votes, remaining users, and leading candidate
+- Live results page
+- Automatic database table creation on server startup
+- Automatic `frontend/assets/uploads/` folder creation
+- Standard API response format
+- Docker and Northflank deployment support
 
-- ✅ **Three Candidates** — Vote for Candidate A, B, or C
-- ✅ **Live Results** — See votes update in real-time with animated progress bars
-- ✅ **Countdown Timer** — Configurable delay before voting opens
-- ✅ **Auto-Close** — Voting automatically closes after a set duration
-- ✅ **Winner Display** — Announces the winner when voting ends
-- ✅ **Reset Votes** — Admin button to clear all votes and start fresh
-- ✅ **Responsive Design** — Works beautifully on desktop, tablet, and mobile
-- ✅ **Dark Theme** — Premium dark UI with glassmorphism effects
-- ✅ **MySQL Storage** — All votes stored in a real database (not memory)
-- ✅ **Docker Ready** — Start with one command: `docker compose up --build`
-- ✅ **Cloud Ready** — Deploy to Render, Railway, Northflank, or Koyeb
+## Project Structure
 
----
+```text
+frontend/
+  index.html
+  login.html
+  register.html
+  admin.html
+  results.html
+  css/style.css
+  js/app.js
+  assets/images/
+  assets/uploads/
 
-## 🏗️ Architecture
+backend/
+  server.js
+  db.js
+  package.json
+  Dockerfile
 
-```
-Browser (User)
-      │
-      ▼
-HTML / CSS / JavaScript   ← Frontend (served by Express)
-      │
-      ▼
-Express.js Server         ← Backend (Node.js)
-      │
-      ▼
-MySQL Database            ← Persistent storage
-```
-
-**One backend serves everything.** No microservices. No API gateway. Simple and clean.
-
----
-
-## 📁 Project Structure
-
-```
-Voting-Web-App-Single-Service/
-├── frontend/                  # Everything the browser sees
-│   ├── index.html             # Main HTML page
-│   ├── style.css              # All styles (dark theme, responsive)
-│   ├── script.js              # All JavaScript logic
-│   └── images/                # Candidate photos
-│       ├── candidate-a.jpg
-│       ├── candidate-b.jpg
-│       └── candidate-c.jpg
-├── backend/                   # Server-side code
-│   ├── server.js              # Express server + API routes
-│   ├── db.js                  # MySQL connection pool
-│   ├── package.json           # Node.js dependencies
-│   └── Dockerfile             # Docker build instructions
-├── database/
-│   └── schema.sql             # Database table creation script
-├── docker-compose.yml         # Run everything with Docker
-├── .env.example               # Environment variables template
-├── .gitignore                 # Files excluded from Git
-├── .dockerignore              # Files excluded from Docker
-├── README.md                  # This file
-├── ARCHITECTURE.md            # Technical architecture details
-├── DEPLOYMENT.md              # Cloud deployment guide
-├── PROJECT-HISTORY.md         # Project development history
-└── LICENSE                    # MIT License
+database/
+  schema.sql
 ```
 
----
+## API Response Format
 
-## 🚀 Quick Start
+Success:
 
-### Option 1: Docker (Recommended)
+```json
+{
+  "success": true,
+  "message": "",
+  "data": {}
+}
+```
 
-The easiest way to run everything — just one command:
+Error:
+
+```json
+{
+  "success": false,
+  "error": ""
+}
+```
+
+## API List
+
+| Method | API | Purpose |
+|---|---|---|
+| GET | `/api/health` | Server and database health check |
+| POST | `/api/register` | Register a voter |
+| POST | `/api/login` | Login a voter |
+| GET | `/api/candidates` | Load candidates |
+| POST | `/api/vote` | Submit vote |
+| GET | `/api/results` | Load live results |
+| POST | `/api/admin/login` | Admin login |
+| GET | `/api/admin/dashboard` | Admin dashboard numbers |
+| POST | `/api/admin/candidate/add` | Add candidate with optional image |
+| PUT | `/api/admin/candidate/update/:id` | Update candidate |
+| DELETE | `/api/admin/candidate/delete/:id` | Delete candidate |
+| POST | `/api/admin/election/start` | Open voting |
+| POST | `/api/admin/election/stop` | Close voting |
+| POST | `/api/admin/election/reset` | Clear votes and voter status |
+
+## Database Tables
+
+### users
+
+- `id`
+- `name`
+- `email`
+- `password`
+- `has_voted`
+- `created_at`
+
+### candidates
+
+- `id`
+- `name`
+- `party`
+- `description`
+- `image`
+- `votes`
+- `created_at`
+
+### election
+
+- `id`
+- `status`
+
+The server automatically creates these tables when it starts. `database/schema.sql` is still included for learning and manual practice.
+
+## Environment Variables
+
+```env
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_password_here
+DB_NAME=voteapp
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
+```
+
+Admin fallback values are:
+
+- username: `admin`
+- password: `admin123`
+
+## Local Run Commands
+
+Install dependencies:
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/Voting-Web-App-Single-Service.git
-cd Voting-Web-App-Single-Service
-
-# Start everything (backend + MySQL)
-docker compose up --build
-```
-
-Open your browser: **http://localhost:3000**
-
-To stop:
-```bash
-docker compose down
-```
-
-### Option 2: Manual (Without Docker)
-
-You need MySQL installed and running locally.
-
-```bash
-# Step 1: Clone the repository
-git clone https://github.com/your-username/Voting-Web-App-Single-Service.git
-cd Voting-Web-App-Single-Service
-
-# Step 2: Create the database
-mysql -u root -p < database/schema.sql
-
-# Step 3: Set up environment variables
-cp .env.example backend/.env
-# Edit backend/.env with your MySQL credentials
-
-# Step 4: Install Node.js dependencies
 cd backend
 npm install
+```
 
-# Step 5: Start the server
+Create `.env` from the example:
+
+```bash
+copy ..\.env.example ..\.env
+```
+
+Start the server:
+
+```bash
 npm start
 ```
 
-Open your browser: **http://localhost:3000**
+Open:
 
----
+```text
+http://localhost:3000
+```
 
-## 🔌 API Endpoints
+## Docker Run
 
-| Method | Endpoint       | Description                          |
-|--------|----------------|--------------------------------------|
-| GET    | `/`            | Serves the frontend (index.html)     |
-| GET    | `/api/health`  | Health check + voting status         |
-| POST   | `/api/vote`    | Cast a vote `{ "candidate": "..." }` |
-| GET    | `/api/results` | Get vote counts for all candidates   |
-| POST   | `/api/reset`   | Delete all votes                     |
+From the project root:
 
----
+```bash
+docker compose up --build
+```
 
-## ⚙️ Configuration
+Open:
 
-All settings are controlled via environment variables (`.env` file):
+```text
+http://localhost:3000
+```
 
-| Variable                 | Default     | Description                           |
-|--------------------------|-------------|---------------------------------------|
-| `PORT`                   | `3000`      | Server port                           |
-| `DB_HOST`                | `localhost` | MySQL hostname                        |
-| `DB_PORT`                | `3306`      | MySQL port                            |
-| `DB_USER`                | `root`      | MySQL username                        |
-| `DB_PASSWORD`            | `password`  | MySQL password                        |
-| `DB_NAME`                | `voteapp`   | Database name                         |
-| `VOTING_DELAY_SECONDS`   | `10`        | Seconds before voting opens           |
-| `VOTING_DURATION_SECONDS`| `120`       | Seconds voting stays open             |
+## Northflank Deployment Steps
 
----
+1. Push this project to GitHub.
+2. Create a Northflank MySQL addon.
+3. Create a Northflank service from the GitHub repository.
+4. Set the Dockerfile path to `backend/Dockerfile`.
+5. Add these environment variables from the MySQL addon:
+   - `DB_HOST`
+   - `DB_PORT`
+   - `DB_USER`
+   - `DB_PASSWORD`
+   - `DB_NAME`
+6. Add admin variables:
+   - `ADMIN_USERNAME`
+   - `ADMIN_PASSWORD`
+7. Deploy the service.
+8. Open the Northflank service URL.
 
-## 🧰 Tech Stack
+The frontend uses:
 
-| Layer      | Technology     | Purpose                              |
-|------------|----------------|--------------------------------------|
-| Frontend   | HTML5          | Page structure                       |
-| Frontend   | CSS3           | Styling and animations               |
-| Frontend   | Vanilla JS     | Interactive behavior                 |
-| Backend    | Node.js        | JavaScript runtime                   |
-| Backend    | Express.js     | Web framework + API                  |
-| Database   | MySQL          | Vote storage                         |
-| DevOps     | Docker         | Containerization                     |
-| DevOps     | Docker Compose | Multi-container orchestration        |
+```js
+const API_URL = window.location.origin;
+```
 
----
-
-## 📚 Learning Resources
-
-This project is built for learning. Every file contains detailed comments explaining:
-
-- **What** each line does
-- **Why** it's needed
-- **How** it connects to other parts
-
-Start reading in this order:
-1. `frontend/index.html` — The page structure
-2. `frontend/style.css` — How it looks
-3. `frontend/script.js` — How it behaves
-4. `backend/server.js` — The API and server
-5. `backend/db.js` — Database connection
-6. `database/schema.sql` — Database structure
-7. `docker-compose.yml` — Container orchestration
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
+So it works on both `localhost` and the Northflank URL without changing code.

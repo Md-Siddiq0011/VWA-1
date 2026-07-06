@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - TN 2031 Legislative Assembly</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="admin">
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">TN</span>
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p>Election controls and candidate management</p>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Vote</a>
+      <a href="results.html">Results</a>
+      <button class="link-button" id="adminLogoutButton">Admin Logout</button>
+    </nav>
+  </header>
+  <main>
+    <section class="admin-login" id="adminLoginPanel">
+      <form class="form-panel" id="adminLoginForm">
+        <h2>Admin Login</h2>
+        <label>Username</label>
+        <input type="text" name="username" required />
+        <label>Password</label>
+        <input type="password" name="password" required />
+        <button type="submit">Login</button>
+        <div class="notice" id="messageBox"></div>
+      </form>
+    </section>
+
+    <section class="admin-dashboard hidden" id="adminDashboard">
+      <div class="dashboard-grid" id="dashboardCards"></div>
+      <div class="control-row">
+        <button id="startElectionButton">Start Election</button>
+        <button id="stopElectionButton">Stop Election</button>
+        <button class="danger" id="resetElectionButton">Reset Election</button>
+      </div>
+
+      <form class="form-panel wide" id="candidateForm">
+        <h2 id="candidateFormTitle">Add Candidate</h2>
+        <input type="hidden" name="id" />
+        <label>Candidate Full Name</label>
+        <input type="text" name="name" required />
+        <label>Party Name</label>
+        <input type="text" name="party" required />
+        <label>Description</label>
+        <textarea name="description" rows="3"></textarea>
+        <label>Candidate Image Upload</label>
+        <input type="file" name="image" accept="image/*" />
+        <button type="submit">Save Candidate</button>
+        <button type="button" class="secondary" id="cancelEditButton">Cancel Edit</button>
+      </form>
+
+      <section class="candidate-table" id="adminCandidateList"></section>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+</body>
+</html>
