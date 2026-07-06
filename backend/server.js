@@ -101,20 +101,13 @@ app.post("/api/register", async (req, res) => {
       return failure(res, 409, "Email already registered");
     }
 
-    // Password security:
-    // During register, bcrypt turns the plain password into a safe hash.
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // TESTING ONLY: storing original password directly
 
-    const [result] = await db.query(
-      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-      [name, email, hashedPassword]
-    );
+await pool.query(
+  "INSERT INTO users (name,email,password) VALUES (?,?,?)",
+  [name, email, password]
+);
 
-    return success(res, "Registration successful", {
-      userId: result.insertId,
-      name,
-      email,
-    });
   } catch (error) {
     console.error(error.message);
     return friendlyDbError(res);
